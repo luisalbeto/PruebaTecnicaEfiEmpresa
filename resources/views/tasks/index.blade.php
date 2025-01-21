@@ -24,6 +24,17 @@
     <div class="container mx-auto py-12">
         <h1 class="text-4xl font-bold text-center mb-8">Lista de Tareas</h1>
 
+        <!-- Formulario de búsqueda -->
+        <form method="GET" action="{{ route('tasks.index') }}" class="flex justify-center mb-6">
+            <input 
+                type="text" 
+                name="search" 
+                class="input input-bordered w-1/2" 
+                placeholder="Buscar por título o descripción" 
+                value="{{ request('search') }}" />
+            <button type="submit" class="btn btn-primary ml-2">Buscar</button>
+        </form>
+
         <!-- Tabla de tareas -->
         <div class="overflow-x-auto w-full">
             <table class="table table-zebra w-full">
@@ -38,35 +49,39 @@
                     </tr>
                 </thead>
                 <tbody>
-    @forelse($tasks as $task)
-        <tr>
-            <th>{{ $loop->iteration }}</th>
-            <td>{{ $task->title }}</td>
-            <td>{{ $task->description }}</td>
-            <td>{{ $task->due_date }}</td>
-            <td>
-                <div class="flex space-x-2">
-                    <!-- Botón Ver -->
-                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-primary">Ver</a>
-                    <!-- Botón Editar -->
-                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">Editar</a>
-                    <!-- Botón Eliminar -->
-                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-error">Eliminar</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-    @empty
-        <tr>
-            <td colspan="5" class="text-center">No hay tareas registradas.</td>
-        </tr>
-    @endforelse
-</tbody>
-
+                    @forelse($tasks as $task)
+                        <tr>
+                            <th>{{ $loop->iteration + ($tasks->currentPage() - 1) * $tasks->perPage() }}</th>
+                            <td>{{ $task->title }}</td>
+                            <td>{{ $task->description }}</td>
+                            <td>{{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}</td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <!-- Botón Ver -->
+                                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-sm btn-primary">Ver</a>
+                                    <!-- Botón Editar -->
+                                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-warning">Editar</a>
+                                    <!-- Botón Eliminar -->
+                                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-error">Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No hay tareas registradas.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
             </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="mt-8">
+            {{ $tasks->links() }}
         </div>
     </div>
 </body>

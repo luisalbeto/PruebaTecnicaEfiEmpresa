@@ -15,7 +15,7 @@
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1">
-        <li><a href="{{ route('home') }}">Inicio</a></li>
+        <li><a href="{{ route('tasks.index') }}">Tareas</a></li>
         <li><a href="{{ route('tasks.create') }}">Crear</a></li>
       </ul>
     </div>
@@ -40,9 +40,6 @@
         <div class="card-body">
           <h2 class="card-title">Crear Tareas</h2>
           <p>Crea tareas fácilmente y establece plazos para mantenerte organizado.</p>
-          <div class="card-actions justify-end">
-            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Crear</a>
-          </div>
         </div>
       </div>
       <!-- Tarjeta 2 -->

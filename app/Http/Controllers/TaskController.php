@@ -5,17 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
+
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Obtener todas las tareas de la base de datos
-        $tasks = Task::all(); // O puedes usar un paginador si tienes muchas tareas
-        return view('tasks.index', compact('tasks')); // Pasa las tareas a la vista
+        $query = Task::query();
+    
+        // Verificar si hay una búsqueda
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%");
+        }
+    
+        // Paginación
+        $tasks = $query->paginate(5)->withQueryString(); // Mantener el valor de búsqueda en la paginación
+    
+        return view('tasks.index', compact('tasks'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -36,7 +48,7 @@ class TaskController extends Controller
         'title' => 'required|string|max:255',
         'description' => 'required|string',
         'due_date' => 'required|date',
-        'status' => 'required|in:pendiente,en progreso,completeda', // Validar valores permitidos
+        'status' => 'required|in:pendiente,en progreso,completada', // Validar valores permitidos
     ]);
 
     // Crear una nueva tarea
@@ -75,23 +87,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $task = Task::findOrFail($id);
+
         // Validar los datos del formulario
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_date' => 'nullable|date',
+            'due_date' => 'required|date',
+            'status' => 'required|in:pendiente,en progreso,completada', // Asegúrate de incluir las opciones válidas aquí
         ]);
-
-        // Obtener la tarea por su ID
-        $task = Task::findOrFail($id); // Si no existe, generará una excepción 404
-
-        // Actualizar la tarea
-        $task->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'due_date' => $request->due_date,
-        ]);
-
+    
+        // Actualizar los datos de la tarea
+        $task->update($validatedData);
+    
         // Redirigir a la lista de tareas con un mensaje de éxito
         return redirect()->route('tasks.index')->with('success', 'Tarea actualizada con éxito.');
     }

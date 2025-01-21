@@ -13,7 +13,7 @@
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal px-1">
-        <li><a href="{{ route('home') }}">Inicio</a></li>
+        <li><a href="{{ route('tasks.index') }}">Tareas</a></li>
         <li><a href="{{ route('tasks.create') }}">Crear</a></li>
       </ul>
     </div>
@@ -40,7 +40,7 @@
         <label for="status" class="label">Estado</label>
         <select id="status" name="status" class="select select-bordered w-full">
             <option value="pendiente">Pendiente</option>
-            <option value="completeda">Completada</option>
+            <option value="completada">Completada</option>
             <option value="en progreso">En Progreso</option>
         </select>
     </div>

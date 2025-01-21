@@ -14,7 +14,7 @@
         </div>
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="{{ route('tasks.index') }}">Inicio</a></li>
+                <li><a href="{{ route('tasks.index') }}">Tareas</a></li>
                 <li><a href="{{ route('tasks.create') }}">Crear Tarea</a></li>
             </ul>
         </div>
@@ -37,15 +37,21 @@
                 <textarea id="description" name="description" class="textarea textarea-bordered w-full">{{ old('description', $task->description) }}</textarea>
             </div>
             <div class="form-control mb-4">
-                <label for="due_date" class="label">Fecha límite</label>
-                <input type="date" id="due_date" name="due_date" class="input input-bordered w-full" value="{{ old('due_date', $task->due_date) }}">
+            <div class="form-control mb-4">
+    <label for="due_date" class="label">Fecha límite</label>
+    <input type="date" id="due_date" name="due_date" class="input input-bordered w-full" value="{{ old('due_date', $task->due_date) }}" required>
+    @error('due_date')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
             </div>
             <div class="form-control mb-4">
                 <label for="status" class="label">Estado</label>
                 <select id="status" name="status" class="select select-bordered w-full">
-                    <option value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pendiente</option>
-                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completada</option>
-                    <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En Progreso</option>
+                    <option value="pendiente" {{ $task->status == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                    <option value="completada" {{ $task->status == 'completada' ? 'selected' : '' }}>Completada</option>
+                    <option value="en progreso" {{ $task->status == 'en progreso' ? 'selected' : '' }}>En Progreso</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary w-full">Actualizar</button>
