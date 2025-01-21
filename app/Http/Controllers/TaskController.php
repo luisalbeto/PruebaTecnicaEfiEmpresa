@@ -31,23 +31,22 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-      // Validar los datos del formulario
-    $request->validate([
+      // Validar los datos de entrada
+      $request->validate([
         'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'due_date' => 'nullable|date',
-        'status' => 'required|string|in:pending,completed,in_progress', // Validar el campo 'status'
+        'description' => 'required|string',
+        'due_date' => 'required|date',
+        'status' => 'required|in:pendiente,en progreso,completeda', // Validar valores permitidos
     ]);
 
-    // Crear una nueva tarea con el campo 'status' incluido
-    $task = Task::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'due_date' => $request->due_date,
-        'status' => $request->status, // Guardar el estado
+    // Crear una nueva tarea
+    Task::create([
+        'title' => $request->input('title'),
+        'description' => $request->input('description'),
+        'due_date' => $request->input('due_date'),
+        'status' => $request->input('status'), // Asegúrate de que este valor sea correcto
     ]);
 
-    // Redirigir a la lista de tareas con un mensaje de éxito
     return redirect()->route('tasks.index')->with('success', 'Tarea creada con éxito.');
     }
 
@@ -112,3 +111,4 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Tarea eliminada con éxito.');
     }
 }
+

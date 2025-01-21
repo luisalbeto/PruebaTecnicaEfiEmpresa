@@ -7,6 +7,19 @@
     @vite('resources/css/app.css')
 </head>
 <body class="bg-gray-100">
+<div class="navbar bg-primary text-primary-content">
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl" href="{{ route('home') }}">Mi Aplicación</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="{{ route('home') }}">Inicio</a></li>
+        <li><a href="{{ route('tasks.create') }}">Crear</a></li>
+      </ul>
+    </div>
+  </div>
+
+  
     <h1 class="text-3xl font-bold underline text-center py-8">Crear Nueva Tarea</h1>
     <form method="POST" action="{{ route('tasks.store') }}" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
     @csrf
@@ -26,14 +39,12 @@
     <div class="form-control mb-4">
         <label for="status" class="label">Estado</label>
         <select id="status" name="status" class="select select-bordered w-full">
-            <option value="pending">Pendiente</option>
-            <option value="completed">Completada</option>
-            <option value="in_progress">En Progreso</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="completeda">Completada</option>
+            <option value="en progreso">En Progreso</option>
         </select>
     </div>
     <button type="submit" class="btn btn-primary w-full">Guardar</button>
 </form>
-
-
 </body>
 </html>
